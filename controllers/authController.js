@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const smsService = require('../services/smsService');
 const { generateToken } = require('../utils/jwtUtils');
+const LoginLog = require('../models/LoginLog');
 
 /**
  * Register a new user with phone number only
@@ -163,6 +164,13 @@ const login = async (req, res) => {
           }
         });
       }
+
+      // Save login log after successful OTP send (login attempt)
+      const loginLog = new LoginLog({
+        userId: user._id,
+        ip: req.ip
+      });
+      await loginLog.save();
 
       res.json({
         success: true,
