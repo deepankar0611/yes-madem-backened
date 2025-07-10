@@ -1,4 +1,5 @@
 const Service = require('../models/Service');
+const mongoose = require('mongoose');
 
 // Get all services (public)
 const getAllServices = async (req, res) => {
@@ -43,6 +44,9 @@ const addService = async (req, res) => {
     } = req.body;
     if (!name || price == null || !subCategoryId) {
       return res.status(400).json({ success: false, message: 'Name, price, and subCategoryId are required' });
+    }
+    if (!mongoose.Types.ObjectId.isValid(subCategoryId)) {
+      return res.status(400).json({ success: false, message: 'Invalid subCategoryId. Must be a valid MongoDB ObjectId.' });
     }
     const service = new Service({
       name,
@@ -94,7 +98,12 @@ const updateService = async (req, res) => {
     if (price != null) service.price = price;
     if (description) service.description = description;
     if (imageUrl) service.imageUrl = imageUrl;
-    if (subCategoryId) service.subCategoryId = subCategoryId;
+    if (subCategoryId) {
+      if (!mongoose.Types.ObjectId.isValid(subCategoryId)) {
+        return res.status(400).json({ success: false, message: 'Invalid subCategoryId. Must be a valid MongoDB ObjectId.' });
+      }
+      service.subCategoryId = subCategoryId;
+    }
     if (keyIngredients) service.keyIngredients = keyIngredients;
     if (benefits) service.benefits = benefits;
     if (procedure) service.procedure = procedure;
@@ -123,10 +132,29 @@ const deleteService = async (req, res) => {
   }
 };
 
+// Get all services by multiple subCategoryIds
+const getServicesBySubCategoryIds = async (req, res) => {
+  try {
+    // Accept subCategoryIds from query (?ids=1,2,3) or body (POST)
+    let subCategoryIds = req.query.ids || req.body.subCategoryIds;
+    if (typeof subCategoryIds === 'string') {
+      subCategoryIds = subCategoryIds.split(',');
+    }
+    if (!Array.isArray(subCategoryIds) || subCategoryIds.length === 0) {
+      return res.status(400).json({ success: false, message: 'subCategoryIds are required' });
+    }
+    const services = await Service.find({ subCategoryId: { $in: subCategoryIds } });
+    res.json({ success: true, services });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to get services by subcategories', error: error.message });
+  }
+};
+
 module.exports = {
   getAllServices,
   getServiceById,
   addService,
   updateService,
-  deleteService
+  deleteService,
+  getServicesBySubCategoryIds
 }; 
