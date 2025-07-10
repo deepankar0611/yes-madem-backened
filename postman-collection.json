@@ -551,6 +551,43 @@
             "description": "Delete a service by ID (admin only)."
           },
           "response": []
+        },
+        {
+          "name": "Get Services By Multiple SubCategoryIds (GET)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/services/by-subcategories?ids=<subCatId1>,<subCatId2>",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "services", "by-subcategories"],
+              "query": [
+                { "key": "ids", "value": "<subCatId1>,<subCatId2>" }
+              ]
+            },
+            "description": "Get all services for multiple subcategories using a comma-separated list of subCategoryIds."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Services By Multiple SubCategoryIds (POST)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"subCategoryIds\": [\"<subCatId1>\", \"<subCatId2>\"]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/services/by-subcategories",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "services", "by-subcategories"]
+            },
+            "description": "Get all services for multiple subcategories using a POST request with an array of subCategoryIds."
+          },
+          "response": []
         }
       ]
     },
