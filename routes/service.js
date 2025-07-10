@@ -4,6 +4,9 @@ const serviceController = require('../controllers/serviceController');
 
 // Get all services
 router.get('/', serviceController.getAllServices);
+// Get all services by multiple subCategoryIds (GET: ?ids=1,2,3 or POST: { subCategoryIds: [id1, id2] })
+router.get('/by-subcategories', serviceController.getServicesBySubCategoryIds);
+router.post('/by-subcategories', serviceController.getServicesBySubCategoryIds);
 // Get a single service by ID
 router.get('/:id', serviceController.getServiceById);
 // Add a new service
