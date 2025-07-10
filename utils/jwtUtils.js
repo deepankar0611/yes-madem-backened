@@ -10,7 +10,8 @@ const generateToken = (user) => {
     id: user._id,
     email: user.email,
     phoneNumber: user.phoneNumber,
-    isVerified: user.isVerified
+    isVerified: user.isVerified,
+    role: user.role
   };
 
   return jwt.sign(payload, process.env.JWT_SECRET, {

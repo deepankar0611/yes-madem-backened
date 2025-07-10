@@ -7,11 +7,38 @@ require('dotenv').config({ path: './config.env' });
 // Import routes and config
 const authRoutes = require('./routes/auth');
 const { connectDB } = require('./config/database');
+const User = require('./models/User');
+const mainCategoryRoutes = require('./routes/mainCategory');
+const subCategoryRoutes = require('./routes/subCategory');
+const serviceRoutes = require('./routes/service');
 
 const app = express();
 
 // Connect to database
 connectDB();
+
+// Seed default admin user if not present
+(async () => {
+  try {
+    const adminExists = await User.findOne({ role: 'admin' });
+    if (!adminExists) {
+      const adminData = {
+        name: 'Default Admin',
+        email: 'admin@yesmadam.com',
+        phoneNumber: '9999999999',
+        password: 'admin123', // Change after first login
+        isVerified: true,
+        role: 'admin',
+      };
+      await User.create(adminData);
+      console.log('Default admin user created:', adminData.email, adminData.phoneNumber);
+    } else {
+      console.log('Admin user already exists.');
+    }
+  } catch (err) {
+    console.error('Error seeding admin user:', err);
+  }
+})();
 
 // Security middleware
 app.use(helmet());
@@ -54,6 +81,11 @@ app.get('/health', (req, res) => {
 
 // API routes
 app.use('/api/auth', authRoutes);
+const cartRoutes = require('./routes/cart');
+app.use('/api/cart', cartRoutes);
+app.use('/api/main-categories', mainCategoryRoutes);
+app.use('/api/sub-categories', subCategoryRoutes);
+app.use('/api/services', serviceRoutes);
 
 // 404 handler
 app.use('*', (req, res) => {

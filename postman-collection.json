@@ -76,7 +76,7 @@
               "host": ["{{baseUrl}}"],
               "path": ["api", "auth", "login"]
             },
-            "description": "Login with phone number only. OTP will be sent for verification and returned in response for testing."
+            "description": "Login with phone number only. OTP will be sent for verification and returned in response for testing.\n\n**NOTE:** Both admin and users use this endpoint. After OTP verification, the response will include the user's role (admin/user) for dashboard redirection."
           },
           "response": []
         },
@@ -99,7 +99,7 @@
               "host": ["{{baseUrl}}"],
               "path": ["api", "auth", "verify-login"]
             },
-            "description": "Verify OTP and complete login. Returns JWT token."
+            "description": "Verify OTP and complete login. Returns JWT token.\n\n**NOTE:** Both admin and users use this endpoint. The response will include the user's role (admin/user) for dashboard redirection."
           },
           "response": []
         },
@@ -146,6 +146,409 @@
               "path": ["api", "auth", "verify-otp"]
             },
             "description": "Verify OTP for account verification. Returns JWT token."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Cart",
+      "item": [
+        {
+          "name": "Get Cart",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/cart",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "cart"]
+            },
+            "description": "Get current user's cart."
+          },
+          "response": []
+        },
+        {
+          "name": "Add to Cart",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"serviceId\": \"<service_id>\",\n  \"quantity\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/cart/add",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "cart", "add"]
+            },
+            "description": "Add an item to the cart."
+          },
+          "response": []
+        },
+        {
+          "name": "Remove from Cart",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"serviceId\": \"<service_id>\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/cart/remove",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "cart", "remove"]
+            },
+            "description": "Remove an item from the cart."
+          },
+          "response": []
+        },
+        {
+          "name": "Increase Quantity",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"serviceId\": \"<service_id>\",\n  \"amount\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/cart/increase",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "cart", "increase"]
+            },
+            "description": "Increase the quantity of an item in the cart."
+          },
+          "response": []
+        },
+        {
+          "name": "Clear Cart",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/cart/clear",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "cart", "clear"]
+            },
+            "description": "Clear all items from the cart."
+          },
+          "response": []
+        },
+        {
+          "name": "Checkout",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/cart/checkout",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "cart", "checkout"]
+            },
+            "description": "Checkout and clear the cart."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Main Categories",
+      "item": [
+        {
+          "name": "Get All Main Categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/main-categories",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "main-categories"]
+            },
+            "description": "Get all main categories."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Main Category By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/main-categories/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "main-categories", ":id"]
+            },
+            "description": "Get a main category by its ID."
+          },
+          "response": []
+        },
+        {
+          "name": "Add Main Category (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Salon at Home\",\n  \"imageUrl\": \"https://example.com/image.jpg\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/main-categories",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "main-categories"]
+            },
+            "description": "Add a new main category (admin only)."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Main Category (Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Spa at Home\",\n  \"imageUrl\": \"https://example.com/spa.jpg\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/main-categories/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "main-categories", ":id"]
+            },
+            "description": "Update a main category by ID (admin only)."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Main Category (Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/main-categories/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "main-categories", ":id"]
+            },
+            "description": "Delete a main category by ID (admin only)."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Sub Categories",
+      "item": [
+        {
+          "name": "Get All Sub Categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/sub-categories",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sub-categories"]
+            },
+            "description": "Get all sub categories."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Sub Category By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/sub-categories/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sub-categories", ":id"]
+            },
+            "description": "Get a sub category by its ID."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Sub Categories By Main Category",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/sub-categories/main/:mainCategoryId",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sub-categories", "main", ":mainCategoryId"]
+            },
+            "description": "Get all sub categories for a main category."
+          },
+          "response": []
+        },
+        {
+          "name": "Add Sub Category (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Facial\",\n  \"imageUrl\": \"https://example.com/facial.jpg\",\n  \"mainCategoryId\": \"<mainCategoryId>\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/sub-categories",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sub-categories"]
+            },
+            "description": "Add a new sub category (admin only)."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Sub Category (Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Waxing\",\n  \"imageUrl\": \"https://example.com/waxing.jpg\",\n  \"mainCategoryId\": \"<mainCategoryId>\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/sub-categories/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sub-categories", ":id"]
+            },
+            "description": "Update a sub category by ID (admin only)."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Sub Category (Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/sub-categories/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sub-categories", ":id"]
+            },
+            "description": "Delete a sub category by ID (admin only)."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Services",
+      "item": [
+        {
+          "name": "Get All Services",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/services",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "services"]
+            },
+            "description": "Get all available services."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Service By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/services/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "services", ":id"]
+            },
+            "description": "Get a single service by its ID."
+          },
+          "response": []
+        },
+        {
+          "name": "Add Service (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Facial\",\n  \"price\": 499,\n  \"description\": \"Premium facial service\",\n  \"image\": \"https://example.com/image.jpg\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/services",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "services"]
+            },
+            "description": "Add a new service (admin only)."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Service (Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Facial Gold\",\n  \"price\": 599\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/services/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "services", ":id"]
+            },
+            "description": "Update a service by ID (admin only)."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Service (Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/services/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "services", ":id"]
+            },
+            "description": "Delete a service by ID (admin only)."
           },
           "response": []
         }

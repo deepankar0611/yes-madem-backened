@@ -259,7 +259,8 @@ const verifyLogin = async (req, res) => {
           name: user.name,
           email: user.email,
           phoneNumber: user.phoneNumber,
-          isVerified: user.isVerified
+          isVerified: user.isVerified,
+          role: user.role
         }
       }
     });
@@ -407,7 +408,8 @@ const verifyOTP = async (req, res) => {
           name: user.name,
           email: user.email,
           phoneNumber: user.phoneNumber,
-          isVerified: user.isVerified
+          isVerified: user.isVerified,
+          role: user.role
         }
       }
     });
