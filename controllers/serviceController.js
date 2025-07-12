@@ -40,7 +40,22 @@ const addService = async (req, res) => {
       isDiscounted,
       discountPrice,
       isPackageOption,
-      isWeekdayOffer
+      isWeekdayOffer,
+      originalPrice,
+      offerTags,
+      duration,
+      includedItems,
+      popularity,
+      isNewLaunch,
+      categoryTags,
+      addOns,
+      bundledOffers,
+      brand,
+      professionalTypes,
+      serviceCharge,
+      productCost,
+      disposableCost,
+      relatedServices
     } = req.body;
     if (!name || price == null || !subCategoryId) {
       return res.status(400).json({ success: false, message: 'Name, price, and subCategoryId are required' });
@@ -63,7 +78,22 @@ const addService = async (req, res) => {
       isDiscounted,
       discountPrice,
       isPackageOption,
-      isWeekdayOffer
+      isWeekdayOffer,
+      originalPrice,
+      offerTags,
+      duration,
+      includedItems,
+      popularity,
+      isNewLaunch,
+      categoryTags,
+      addOns,
+      bundledOffers,
+      brand,
+      professionalTypes,
+      serviceCharge,
+      productCost,
+      disposableCost,
+      relatedServices
     });
     await service.save();
     res.status(201).json({ success: true, message: 'Service added', service });

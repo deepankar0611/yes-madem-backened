@@ -61,6 +61,53 @@ const serviceSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  originalPrice: {
+    type: Number
+  },
+  offerTags: [String], // e.g., ["50% OFF", "NEW LAUNCH"]
+  duration: {
+    type: String // e.g., "1 hr 15 mins"
+  },
+  includedItems: [String], // e.g., ["Free Silicone Facial Brush"]
+  popularity: {
+    type: String // e.g., "25K+ people booked this in last 30 days"
+  },
+  isNewLaunch: {
+    type: Boolean,
+    default: false
+  },
+  categoryTags: [String], // e.g., ["Top Selling", "Premium Facial", "Classic Facial"]
+  addOns: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Service'
+    }
+  ], // references to other services as add-ons
+  bundledOffers: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Service'
+    }
+  ], // references to other services as bundles
+  brand: {
+    type: String // e.g., "ORGANICA DA ROMA"
+  },
+  professionalTypes: [String], // e.g., ["Standard", "Gold"]
+  serviceCharge: {
+    type: Number
+  },
+  productCost: {
+    type: Number
+  },
+  disposableCost: {
+    type: Number
+  },
+  relatedServices: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Service'
+    }
+  ],
   createdAt: {
     type: Date,
     default: Date.now

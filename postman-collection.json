@@ -504,14 +504,14 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Facial\",\n  \"price\": 499,\n  \"description\": \"Premium facial service\",\n  \"image\": \"https://example.com/image.jpg\"\n}"
+              "raw": "{\n  \"name\": \"Korean Glow Facial\",\n  \"price\": 1249,\n  \"originalPrice\": 2499,\n  \"description\": \"9 Steps Facial | Includes Free Silicone Facial Brush\",\n  \"imageUrl\": \"https://example.com/image.jpg\",\n  \"subCategoryId\": \"64e8b2c1f1a2b3c4d5e6f7a8\",\n  \"keyIngredients\": [\n    { \"name\": \"Ginseng\", \"description\": \"Helps achieve glass glow skin\", \"imageUrl\": \"https://example.com/ginseng.jpg\" }\n  ],\n  \"benefits\": [\"Reduces aging signs\", \"Brightens skin\"],\n  \"procedure\": [\n    { \"title\": \"Step 1\", \"description\": \"Cleansing\", \"imageUrl\": \"https://example.com/step1.jpg\" }\n  ],\n  \"precautionsAndAftercare\": [\"Avoid sun exposure\", \"Use sunscreen\"],\n  \"thingsToKnow\": [\"Suitable for all skin types\"],\n  \"faqs\": [\n    { \"question\": \"Is this suitable for sensitive skin?\", \"answer\": \"Yes, it is.\" }\n  ],\n  \"isDiscounted\": true,\n  \"discountPrice\": 1249,\n  \"isPackageOption\": false,\n  \"isWeekdayOffer\": true,\n  \"offerTags\": [\"50% OFF\", \"NEW LAUNCH\"],\n  \"duration\": \"1 hr 15 mins\",\n  \"includedItems\": [\"Free Silicone Facial Brush\"],\n  \"popularity\": \"25K+ people booked this in last 30 days\",\n  \"isNewLaunch\": true,\n  \"categoryTags\": [\"Top Selling\", \"Premium Facial\"],\n  \"addOns\": [\"64e8b2c1f1a2b3c4d5e6f7b1\", \"64e8b2c1f1a2b3c4d5e6f7b2\"],\n  \"bundledOffers\": [\"64e8b2c1f1a2b3c4d5e6f7c1\"],\n  \"brand\": \"ORGANICA DA ROMA\",\n  \"professionalTypes\": [\"Standard\", \"Gold\"],\n  \"serviceCharge\": 300,\n  \"productCost\": 499,\n  \"disposableCost\": 60,\n  \"relatedServices\": [\"64e8b2c1f1a2b3c4d5e6f7d1\", \"64e8b2c1f1a2b3c4d5e6f7d2\"]\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/services",
               "host": ["{{baseUrl}}"],
               "path": ["api", "services"]
             },
-            "description": "Add a new service (admin only)."
+            "description": "Add a new service (admin only). Must include subCategoryId. subCategoryId must be a valid MongoDB ObjectId (e.g., 64e8b2c1f1a2b3c4d5e6f7a8). Now supports all fields for comprehensive service creation."
           },
           "response": []
         },
@@ -525,14 +525,14 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Facial Gold\",\n  \"price\": 599\n}"
+              "raw": "{\n  \"name\": \"Facial Gold\",\n  \"price\": 599,\n  \"subCategoryId\": \"64e8b2c1f1a2b3c4d5e6f7a8\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/services/:id",
               "host": ["{{baseUrl}}"],
               "path": ["api", "services", ":id"]
             },
-            "description": "Update a service by ID (admin only)."
+            "description": "Update a service by ID (admin only). Include subCategoryId if you want to set or change it. subCategoryId must be a valid MongoDB ObjectId (e.g., 64e8b2c1f1a2b3c4d5e6f7a8)."
           },
           "response": []
         },
