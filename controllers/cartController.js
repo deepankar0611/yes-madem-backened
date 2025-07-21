@@ -61,12 +61,12 @@ const increaseQuantity = async (req, res) => {
     if (!mongoose.Types.ObjectId.isValid(serviceId)) {
       return res.status(400).json({ success: false, message: 'Invalid serviceId' });
     }
-    const inc = amount && amount > 0 ? amount : 1;
+    const inc = Number.isFinite(Number(amount)) && Number(amount) > 0 ? Number(amount) : 1;
     const cart = await Cart.findOne({ userId: req.user._id });
     if (!cart) return res.status(404).json({ success: false, message: 'Cart not found' });
     const item = cart.items.find(i => i.serviceId.toString() === serviceId);
     if (!item) return res.status(404).json({ success: false, message: 'Item not found in cart' });
-    item.quantity += inc;
+    item.quantity = Number(item.quantity) + inc;
     await cart.save();
     res.json({ success: true, message: 'Quantity increased', cart });
   } catch (error) {

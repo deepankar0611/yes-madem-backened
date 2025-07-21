@@ -85,6 +85,14 @@ const serviceSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  isLastMinuteAddon: {
+    type: Boolean,
+    default: false
+  },
+  isPeopleAlsoAvailed: {
+    type: Boolean,
+    default: false
+  },
   addOns: [
     {
       type: mongoose.Schema.Types.ObjectId,

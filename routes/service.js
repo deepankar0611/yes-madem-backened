@@ -19,6 +19,10 @@ router.post('/trending-near-you', serviceController.addTrendingNearYou);
 router.post('/remove-trending-near-you', serviceController.removeTrendingNearYou);
 router.post('/best-seller', serviceController.addBestSeller);
 router.post('/remove-best-seller', serviceController.removeBestSeller);
+router.post('/last-minute-addon', serviceController.addLastMinuteAddon);
+router.post('/remove-last-minute-addon', serviceController.removeLastMinuteAddon);
+router.post('/people-also-availed', serviceController.addPeopleAlsoAvailed);
+router.post('/remove-people-also-availed', serviceController.removePeopleAlsoAvailed);
 // Get all services by subCategoryId
 router.get('/subcategory/:subCategoryId', async (req, res) => {
   try {

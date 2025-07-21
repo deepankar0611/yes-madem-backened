@@ -256,6 +256,82 @@ const removeBestSeller = async (req, res) => {
   }
 };
 
+// Mark a service as Last Minute Addon
+const addLastMinuteAddon = async (req, res) => {
+  try {
+    const { serviceId } = req.body;
+    if (!serviceId) {
+      return res.status(400).json({ success: false, message: 'serviceId is required' });
+    }
+    const service = await Service.findById(serviceId);
+    if (!service) {
+      return res.status(404).json({ success: false, message: 'Service not found' });
+    }
+    service.isLastMinuteAddon = true;
+    await service.save();
+    res.json({ success: true, message: 'Service marked as Last Minute Addon', service });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to mark as Last Minute Addon', error: error.message });
+  }
+};
+
+// Remove a service from Last Minute Addon
+const removeLastMinuteAddon = async (req, res) => {
+  try {
+    const { serviceId } = req.body;
+    if (!serviceId) {
+      return res.status(400).json({ success: false, message: 'serviceId is required' });
+    }
+    const service = await Service.findById(serviceId);
+    if (!service) {
+      return res.status(404).json({ success: false, message: 'Service not found' });
+    }
+    service.isLastMinuteAddon = false;
+    await service.save();
+    res.json({ success: true, message: 'Service removed from Last Minute Addon', service });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to remove from Last Minute Addon', error: error.message });
+  }
+};
+
+// Mark a service as People Also Availed
+const addPeopleAlsoAvailed = async (req, res) => {
+  try {
+    const { serviceId } = req.body;
+    if (!serviceId) {
+      return res.status(400).json({ success: false, message: 'serviceId is required' });
+    }
+    const service = await Service.findById(serviceId);
+    if (!service) {
+      return res.status(404).json({ success: false, message: 'Service not found' });
+    }
+    service.isPeopleAlsoAvailed = true;
+    await service.save();
+    res.json({ success: true, message: 'Service marked as People Also Availed', service });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to mark as People Also Availed', error: error.message });
+  }
+};
+
+// Remove a service from People Also Availed
+const removePeopleAlsoAvailed = async (req, res) => {
+  try {
+    const { serviceId } = req.body;
+    if (!serviceId) {
+      return res.status(400).json({ success: false, message: 'serviceId is required' });
+    }
+    const service = await Service.findById(serviceId);
+    if (!service) {
+      return res.status(404).json({ success: false, message: 'Service not found' });
+    }
+    service.isPeopleAlsoAvailed = false;
+    await service.save();
+    res.json({ success: true, message: 'Service removed from People Also Availed', service });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to remove from People Also Availed', error: error.message });
+  }
+};
+
 module.exports = {
   getAllServices,
   getServiceById,
@@ -266,5 +342,9 @@ module.exports = {
   addTrendingNearYou,
   removeTrendingNearYou,
   addBestSeller,
-  removeBestSeller
+  removeBestSeller,
+  addLastMinuteAddon,
+  removeLastMinuteAddon,
+  addPeopleAlsoAvailed,
+  removePeopleAlsoAvailed
 }; 

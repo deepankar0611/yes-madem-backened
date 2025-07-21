@@ -56,7 +56,17 @@ const userSchema = new mongoose.Schema({
     type: String,
     enum: ['user', 'admin'],
     default: 'user',
-  }
+  },
+  addresses: [
+    {
+      label: { type: String },
+      addressLine: { type: String, required: true },
+      city: { type: String },
+      state: { type: String },
+      pincode: { type: String },
+      createdAt: { type: Date, default: Date.now }
+    }
+  ]
 });
 
 // Index for better query performance

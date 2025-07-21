@@ -495,6 +495,33 @@ const updateProfile = async (req, res) => {
   }
 };
 
+// Save a new address for the authenticated user
+const saveAddress = async (req, res) => {
+  try {
+    const user = req.user;
+    const { address } = req.body;
+    if (!address) {
+      return res.status(400).json({ success: false, message: 'address is required' });
+    }
+    const newAddress = { addressLine: address };
+    user.addresses.push(newAddress);
+    await user.save();
+    res.json({ success: true, message: 'Address saved successfully', addresses: user.addresses });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to save address', error: error.message });
+  }
+};
+
+// Get all addresses for the authenticated user
+const getAddresses = async (req, res) => {
+  try {
+    const user = req.user;
+    res.json({ success: true, addresses: user.addresses || [] });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to fetch addresses', error: error.message });
+  }
+};
+
 module.exports = {
   register,
   login,
@@ -502,5 +529,7 @@ module.exports = {
   sendOTP,
   verifyOTP,
   getProfile,
-  updateProfile
+  updateProfile,
+  saveAddress,
+  getAddresses
 }; 

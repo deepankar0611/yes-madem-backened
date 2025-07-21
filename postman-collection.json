@@ -1,217 +1,17 @@
 {
   "info": {
-    "name": "Login OTP System API - Phone Only (With OTP in Response)",
-    "description": "Complete API collection for testing the Login System with Phone-Only OTP Authentication. OTP is returned in response for testing.",
+    "name": "Yes Madem API - Cart & Service Features",
+    "description": "Postman collection for Cart, Trending Near You, and Best Seller endpoints.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
-    {
-      "key": "baseUrl",
-      "value": "http://localhost:3000",
-      "type": "string"
-    },
-    {
-      "key": "authToken",
-      "value": "",
-      "type": "string"
-    }
+    { "key": "baseUrl", "value": "http://localhost:3000", "type": "string" },
+    { "key": "authToken", "value": "", "type": "string" }
   ],
   "item": [
     {
-      "name": "Health Check",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "{{baseUrl}}/health",
-          "host": ["{{baseUrl}}"],
-          "path": ["health"]
-        },
-        "description": "Check if the server is running"
-      },
-      "response": []
-    },
-    {
-      "name": "Authentication",
-      "item": [
-        {
-          "name": "1. Register User (Phone Only)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"John Doe\",\n  \"phoneNumber\": \"9876543210\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/auth/register",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "auth", "register"]
-            },
-            "description": "Register a new user with name and phone number only. OTP will be sent to the phone number and returned in response for testing."
-          },
-          "response": []
-        },
-        {
-          "name": "2. Login User (Phone Only)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"phoneNumber\": \"9876543210\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/auth/login",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "auth", "login"]
-            },
-            "description": "Login with phone number only. OTP will be sent for verification and returned in response for testing.\n\n**NOTE:** Both admin and users use this endpoint. After OTP verification, the response will include the user's role (admin/user) for dashboard redirection."
-          },
-          "response": []
-        },
-        {
-          "name": "3. Verify Login OTP",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"phoneNumber\": \"9876543210\",\n  \"otp\": \"123456\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/auth/verify-login",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "auth", "verify-login"]
-            },
-            "description": "Verify OTP and complete login. Returns JWT token.\n\n**NOTE:** Both admin and users use this endpoint. The response will include the user's role (admin/user) for dashboard redirection."
-          },
-          "response": []
-        },
-        {
-          "name": "4. Send OTP (For Verification)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"phoneNumber\": \"9876543210\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/auth/send-otp",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "auth", "send-otp"]
-            },
-            "description": "Send OTP to user's phone number for account verification. OTP is returned in response for testing."
-          },
-          "response": []
-        },
-        {
-          "name": "5. Verify OTP (For Account Verification)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"phoneNumber\": \"9876543210\",\n  \"otp\": \"123456\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/auth/verify-otp",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "auth", "verify-otp"]
-            },
-            "description": "Verify OTP for account verification. Returns JWT token."
-          },
-          "response": []
-        }
-      ]
-    },
-    {
       "name": "Cart",
       "item": [
-        {
-          "name": "Get Cart",
-          "request": {
-            "method": "GET",
-            "header": [
-              { "key": "Authorization", "value": "Bearer {{authToken}}" }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/cart",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "cart"]
-            },
-            "description": "Get current user's cart."
-          },
-          "response": []
-        },
-        {
-          "name": "Add to Cart",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{authToken}}" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"serviceId\": \"<service_id>\",\n  \"quantity\": 1\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/cart/add",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "cart", "add"]
-            },
-            "description": "Add an item to the cart."
-          },
-          "response": []
-        },
-        {
-          "name": "Remove from Cart",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{authToken}}" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"serviceId\": \"<service_id>\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/cart/remove",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "cart", "remove"]
-            },
-            "description": "Remove an item from the cart."
-          },
-          "response": []
-        },
         {
           "name": "Increase Quantity",
           "request": {
@@ -224,353 +24,56 @@
               "mode": "raw",
               "raw": "{\n  \"serviceId\": \"<service_id>\",\n  \"amount\": 1\n}"
             },
-            "url": {
-              "raw": "{{baseUrl}}/api/cart/increase",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "cart", "increase"]
-            },
-            "description": "Increase the quantity of an item in the cart."
-          },
-          "response": []
+            "url": { "raw": "{{baseUrl}}/api/cart/increase", "host": ["{{baseUrl}}"], "path": ["api", "cart", "increase"] }
+          }
         },
         {
-          "name": "Clear Cart",
+          "name": "Decrease Quantity",
           "request": {
             "method": "POST",
             "header": [
+              { "key": "Content-Type", "value": "application/json" },
               { "key": "Authorization", "value": "Bearer {{authToken}}" }
             ],
-            "url": {
-              "raw": "{{baseUrl}}/api/cart/clear",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "cart", "clear"]
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"serviceId\": \"<service_id>\",\n  \"amount\": 1\n}"
             },
-            "description": "Clear all items from the cart."
-          },
-          "response": []
+            "url": { "raw": "{{baseUrl}}/api/cart/decrease", "host": ["{{baseUrl}}"], "path": ["api", "cart", "decrease"] }
+          }
         },
         {
-          "name": "Checkout",
+          "name": "Checkout With Details",
           "request": {
             "method": "POST",
             "header": [
+              { "key": "Content-Type", "value": "application/json" },
               { "key": "Authorization", "value": "Bearer {{authToken}}" }
             ],
-            "url": {
-              "raw": "{{baseUrl}}/api/cart/checkout",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "cart", "checkout"]
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"checkoutId\": \"<cart_id>\",\n  \"professionalType\": \"Standard\",\n  \"date\": \"2024-07-01\",\n  \"time\": \"07:00 - 07:15 pm\",\n  \"address\": \"1821/41, Pocket 25, Jorbagh, Tri Nagar, New Delhi\"\n}"
             },
-            "description": "Checkout and clear the cart."
-          },
-          "response": []
+            "url": { "raw": "{{baseUrl}}/api/cart/checkout-with-details", "host": ["{{baseUrl}}"], "path": ["api", "cart", "checkout-with-details"] }
+          }
+        },
+        {
+          "name": "Get Booking Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/cart/booking-details", "host": ["{{baseUrl}}"], "path": ["api", "cart", "booking-details"] }
+          }
         }
       ]
     },
     {
-      "name": "Main Categories",
+      "name": "Service",
       "item": [
         {
-          "name": "Get All Main Categories",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/main-categories",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "main-categories"]
-            },
-            "description": "Get all main categories."
-          },
-          "response": []
-        },
-        {
-          "name": "Get Main Category By ID",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/main-categories/:id",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "main-categories", ":id"]
-            },
-            "description": "Get a main category by its ID."
-          },
-          "response": []
-        },
-        {
-          "name": "Add Main Category (Admin)",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{authToken}}" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"Salon at Home\",\n  \"imageUrl\": \"https://example.com/image.jpg\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/main-categories",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "main-categories"]
-            },
-            "description": "Add a new main category (admin only)."
-          },
-          "response": []
-        },
-        {
-          "name": "Update Main Category (Admin)",
-          "request": {
-            "method": "PUT",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{authToken}}" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"Spa at Home\",\n  \"imageUrl\": \"https://example.com/spa.jpg\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/main-categories/:id",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "main-categories", ":id"]
-            },
-            "description": "Update a main category by ID (admin only)."
-          },
-          "response": []
-        },
-        {
-          "name": "Delete Main Category (Admin)",
-          "request": {
-            "method": "DELETE",
-            "header": [
-              { "key": "Authorization", "value": "Bearer {{authToken}}" }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/main-categories/:id",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "main-categories", ":id"]
-            },
-            "description": "Delete a main category by ID (admin only)."
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "Sub Categories",
-      "item": [
-        {
-          "name": "Get All Sub Categories",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/sub-categories",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "sub-categories"]
-            },
-            "description": "Get all sub categories."
-          },
-          "response": []
-        },
-        {
-          "name": "Get Sub Category By ID",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/sub-categories/:id",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "sub-categories", ":id"]
-            },
-            "description": "Get a sub category by its ID."
-          },
-          "response": []
-        },
-        {
-          "name": "Get Sub Categories By Main Category",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/sub-categories/main/:mainCategoryId",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "sub-categories", "main", ":mainCategoryId"]
-            },
-            "description": "Get all sub categories for a main category."
-          },
-          "response": []
-        },
-        {
-          "name": "Add Sub Category (Admin)",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{authToken}}" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"Facial\",\n  \"imageUrl\": \"https://example.com/facial.jpg\",\n  \"mainCategoryId\": \"<mainCategoryId>\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/sub-categories",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "sub-categories"]
-            },
-            "description": "Add a new sub category (admin only)."
-          },
-          "response": []
-        },
-        {
-          "name": "Update Sub Category (Admin)",
-          "request": {
-            "method": "PUT",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{authToken}}" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"Waxing\",\n  \"imageUrl\": \"https://example.com/waxing.jpg\",\n  \"mainCategoryId\": \"<mainCategoryId>\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/sub-categories/:id",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "sub-categories", ":id"]
-            },
-            "description": "Update a sub category by ID (admin only)."
-          },
-          "response": []
-        },
-        {
-          "name": "Delete Sub Category (Admin)",
-          "request": {
-            "method": "DELETE",
-            "header": [
-              { "key": "Authorization", "value": "Bearer {{authToken}}" }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/sub-categories/:id",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "sub-categories", ":id"]
-            },
-            "description": "Delete a sub category by ID (admin only)."
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "Services",
-      "item": [
-        {
-          "name": "Get All Services",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/services",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "services"]
-            },
-            "description": "Get all available services."
-          },
-          "response": []
-        },
-        {
-          "name": "Get Service By ID",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/services/:id",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "services", ":id"]
-            },
-            "description": "Get a single service by its ID."
-          },
-          "response": []
-        },
-        {
-          "name": "Add Service (Admin)",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{authToken}}" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"Korean Glow Facial\",\n  \"price\": 1249,\n  \"originalPrice\": 2499,\n  \"description\": \"9 Steps Facial | Includes Free Silicone Facial Brush\",\n  \"imageUrl\": \"https://example.com/image.jpg\",\n  \"subCategoryId\": \"64e8b2c1f1a2b3c4d5e6f7a8\",\n  \"keyIngredients\": [\n    { \"name\": \"Ginseng\", \"description\": \"Helps achieve glass glow skin\", \"imageUrl\": \"https://example.com/ginseng.jpg\" }\n  ],\n  \"benefits\": [\"Reduces aging signs\", \"Brightens skin\"],\n  \"procedure\": [\n    { \"title\": \"Step 1\", \"description\": \"Cleansing\", \"imageUrl\": \"https://example.com/step1.jpg\" }\n  ],\n  \"precautionsAndAftercare\": [\"Avoid sun exposure\", \"Use sunscreen\"],\n  \"thingsToKnow\": [\"Suitable for all skin types\"],\n  \"faqs\": [\n    { \"question\": \"Is this suitable for sensitive skin?\", \"answer\": \"Yes, it is.\" }\n  ],\n  \"isDiscounted\": true,\n  \"discountPrice\": 1249,\n  \"isPackageOption\": false,\n  \"isWeekdayOffer\": true,\n  \"offerTags\": [\"50% OFF\", \"NEW LAUNCH\"],\n  \"duration\": \"1 hr 15 mins\",\n  \"includedItems\": [\"Free Silicone Facial Brush\"],\n  \"popularity\": \"25K+ people booked this in last 30 days\",\n  \"isNewLaunch\": true,\n  \"categoryTags\": [\"Top Selling\", \"Premium Facial\"],\n  \"addOns\": [\"64e8b2c1f1a2b3c4d5e6f7b1\", \"64e8b2c1f1a2b3c4d5e6f7b2\"],\n  \"bundledOffers\": [\"64e8b2c1f1a2b3c4d5e6f7c1\"],\n  \"brand\": \"ORGANICA DA ROMA\",\n  \"professionalTypes\": [\"Standard\", \"Gold\"],\n  \"serviceCharge\": 300,\n  \"productCost\": 499,\n  \"disposableCost\": 60,\n  \"relatedServices\": [\"64e8b2c1f1a2b3c4d5e6f7d1\", \"64e8b2c1f1a2b3c4d5e6f7d2\"]\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/services",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "services"]
-            },
-            "description": "Add a new service (admin only). Must include subCategoryId. subCategoryId must be a valid MongoDB ObjectId (e.g., 64e8b2c1f1a2b3c4d5e6f7a8). Now supports all fields for comprehensive service creation."
-          },
-          "response": []
-        },
-        {
-          "name": "Update Service (Admin)",
-          "request": {
-            "method": "PUT",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{authToken}}" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"Facial Gold\",\n  \"price\": 599,\n  \"subCategoryId\": \"64e8b2c1f1a2b3c4d5e6f7a8\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/services/:id",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "services", ":id"]
-            },
-            "description": "Update a service by ID (admin only). Include subCategoryId if you want to set or change it. subCategoryId must be a valid MongoDB ObjectId (e.g., 64e8b2c1f1a2b3c4d5e6f7a8)."
-          },
-          "response": []
-        },
-        {
-          "name": "Delete Service (Admin)",
-          "request": {
-            "method": "DELETE",
-            "header": [
-              { "key": "Authorization", "value": "Bearer {{authToken}}" }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/services/:id",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "services", ":id"]
-            },
-            "description": "Delete a service by ID (admin only)."
-          },
-          "response": []
-        },
-        {
-          "name": "Get Services By Multiple SubCategoryIds (GET)",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/services/by-subcategories?ids=<subCatId1>,<subCatId2>",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "services", "by-subcategories"],
-              "query": [
-                { "key": "ids", "value": "<subCatId1>,<subCatId2>" }
-              ]
-            },
-            "description": "Get all services for multiple subcategories using a comma-separated list of subCategoryIds."
-          },
-          "response": []
-        },
-        {
-          "name": "Get Services By Multiple SubCategoryIds (POST)",
+          "name": "Mark as Trending Near You",
           "request": {
             "method": "POST",
             "header": [
@@ -578,155 +81,52 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"subCategoryIds\": [\"<subCatId1>\", \"<subCatId2>\"]\n}"
+              "raw": "{\n  \"serviceId\": \"<service_id>\"\n}"
             },
-            "url": {
-              "raw": "{{baseUrl}}/api/services/by-subcategories",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "services", "by-subcategories"]
-            },
-            "description": "Get all services for multiple subcategories using a POST request with an array of subCategoryIds."
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "Protected Routes",
-      "item": [
-        {
-          "name": "6. Get User Profile",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{authToken}}"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/auth/profile",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "auth", "profile"]
-            },
-            "description": "Get current user's profile. Requires authentication token."
-          },
-          "response": []
+            "url": { "raw": "{{baseUrl}}/api/services/trending-near-you", "host": ["{{baseUrl}}"], "path": ["api", "services", "trending-near-you"] }
+          }
         },
         {
-          "name": "7. Update User Profile",
-          "request": {
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{authToken}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"John Smith\",\n  \"email\": \"johnsmith@example.com\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/auth/profile",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "auth", "profile"]
-            },
-            "description": "Update user's profile information. Requires authentication token."
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "Error Testing",
-      "item": [
-        {
-          "name": "8. Register with Invalid Phone",
+          "name": "Remove from Trending Near You",
           "request": {
             "method": "POST",
             "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
+              { "key": "Content-Type", "value": "application/json" }
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Test User\",\n  \"phoneNumber\": \"12345\"\n}"
+              "raw": "{\n  \"serviceId\": \"<service_id>\"\n}"
             },
-            "url": {
-              "raw": "{{baseUrl}}/api/auth/register",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "auth", "register"]
-            },
-            "description": "Test validation error for invalid phone number."
-          },
-          "response": []
+            "url": { "raw": "{{baseUrl}}/api/services/remove-trending-near-you", "host": ["{{baseUrl}}"], "path": ["api", "services", "remove-trending-near-you"] }
+          }
         },
         {
-          "name": "9. Login with Non-existent Phone",
+          "name": "Mark as Best Seller",
           "request": {
             "method": "POST",
             "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
+              { "key": "Content-Type", "value": "application/json" }
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"phoneNumber\": \"9999999999\"\n}"
+              "raw": "{\n  \"serviceId\": \"<service_id>\"\n}"
             },
-            "url": {
-              "raw": "{{baseUrl}}/api/auth/login",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "auth", "login"]
-            },
-            "description": "Test login failure with non-existent phone number."
-          },
-          "response": []
+            "url": { "raw": "{{baseUrl}}/api/services/best-seller", "host": ["{{baseUrl}}"], "path": ["api", "services", "best-seller"] }
+          }
         },
         {
-          "name": "10. Verify Wrong Login OTP",
+          "name": "Remove from Best Seller",
           "request": {
             "method": "POST",
             "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
+              { "key": "Content-Type", "value": "application/json" }
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"phoneNumber\": \"9876543210\",\n  \"otp\": \"999999\"\n}"
+              "raw": "{\n  \"serviceId\": \"<service_id>\"\n}"
             },
-            "url": {
-              "raw": "{{baseUrl}}/api/auth/verify-login",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "auth", "verify-login"]
-            },
-            "description": "Test login verification failure with wrong OTP."
-          },
-          "response": []
-        },
-        {
-          "name": "11. Access Protected Route Without Token",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/auth/profile",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "auth", "profile"]
-            },
-            "description": "Test access to protected route without authentication token."
-          },
-          "response": []
+            "url": { "raw": "{{baseUrl}}/api/services/remove-best-seller", "host": ["{{baseUrl}}"], "path": ["api", "services", "remove-best-seller"] }
+          }
         }
       ]
     }

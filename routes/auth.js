@@ -39,5 +39,7 @@ router.post('/verify-otp', authController.verifyOTP);
 // Protected routes
 router.get('/profile', authenticate, authController.getProfile);
 router.put('/profile', authenticate, authController.updateProfile);
+router.post('/address', authenticate, authController.saveAddress);
+router.get('/address', authenticate, authController.getAddresses);
 
 module.exports = router; 
