@@ -74,6 +74,29 @@ const increaseQuantity = async (req, res) => {
   }
 };
 
+// Decrease quantity of an item
+const decreaseQuantity = async (req, res) => {
+  try {
+    const { serviceId, amount } = req.body;
+    if (!mongoose.Types.ObjectId.isValid(serviceId)) {
+      return res.status(400).json({ success: false, message: 'Invalid serviceId' });
+    }
+    const dec = amount && amount > 0 ? amount : 1;
+    const cart = await Cart.findOne({ userId: req.user._id });
+    if (!cart) return res.status(404).json({ success: false, message: 'Cart not found' });
+    const itemIndex = cart.items.findIndex(i => i.serviceId.toString() === serviceId);
+    if (itemIndex === -1) return res.status(404).json({ success: false, message: 'Item not found in cart' });
+    cart.items[itemIndex].quantity -= dec;
+    if (cart.items[itemIndex].quantity <= 0) {
+      cart.items.splice(itemIndex, 1); // Remove item if quantity is 0 or less
+    }
+    await cart.save();
+    res.json({ success: true, message: 'Quantity decreased', cart });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to decrease quantity', error: error.message });
+  }
+};
+
 // Clear all items from cart
 const clearCart = async (req, res) => {
   try {
@@ -102,11 +125,65 @@ const checkout = async (req, res) => {
   }
 };
 
+// Checkout with details (checkoutId, professional, date, time, address)
+const checkoutWithDetails = async (req, res) => {
+  try {
+    const { checkoutId, professionalType, date, time, address } = req.body;
+    if (!checkoutId || !professionalType || !date || !time || !address) {
+      return res.status(400).json({ success: false, message: 'checkoutId, professionalType, date, time, and address are required.' });
+    }
+    const cart = await Cart.findOne({ _id: checkoutId, userId: req.user._id }).populate('items.serviceId');
+    if (!cart) {
+      return res.status(404).json({ success: false, message: 'Cart not found.' });
+    }
+    // Placeholder: In a real app, create an Order/Booking here
+    res.json({
+      success: true,
+      message: 'Checkout successful. Booking details received.',
+      data: {
+        checkoutId,
+        professionalType,
+        date,
+        time,
+        address,
+        cart: [{ cartId: cart._id, items: cart.items }]
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Checkout with details failed', error: error.message });
+  }
+};
+
+// Get booking details for the authenticated user (placeholder: latest cart)
+const getBookingDetails = async (req, res) => {
+  try {
+    // Find the latest cart for the user (as a placeholder for real booking data)
+    const cart = await Cart.findOne({ userId: req.user._id }).sort({ updatedAt: -1 }).populate('items.serviceId');
+    if (!cart) {
+      return res.status(404).json({ success: false, message: 'No booking found' });
+    }
+    res.json({
+      success: true,
+      message: 'Booking details fetched successfully.',
+      data: {
+        cartId: cart._id,
+        items: cart.items,
+        updatedAt: cart.updatedAt
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to fetch booking details', error: error.message });
+  }
+};
+
 module.exports = {
   getCart,
   addToCart,
   removeFromCart,
   increaseQuantity,
+  decreaseQuantity,
   clearCart,
-  checkout
+  checkout,
+  checkoutWithDetails,
+  getBookingDetails
 }; 

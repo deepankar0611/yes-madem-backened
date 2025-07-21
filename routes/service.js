@@ -15,6 +15,10 @@ router.post('/', serviceController.addService);
 router.put('/:id', serviceController.updateService);
 // Delete a service
 router.delete('/:id', serviceController.deleteService);
+router.post('/trending-near-you', serviceController.addTrendingNearYou);
+router.post('/remove-trending-near-you', serviceController.removeTrendingNearYou);
+router.post('/best-seller', serviceController.addBestSeller);
+router.post('/remove-best-seller', serviceController.removeBestSeller);
 // Get all services by subCategoryId
 router.get('/subcategory/:subCategoryId', async (req, res) => {
   try {

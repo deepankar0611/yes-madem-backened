@@ -77,6 +77,14 @@ const serviceSchema = new mongoose.Schema({
     default: false
   },
   categoryTags: [String], // e.g., ["Top Selling", "Premium Facial", "Classic Facial"]
+  isTrendingNearYou: {
+    type: Boolean,
+    default: false
+  },
+  isBestSeller: {
+    type: Boolean,
+    default: false
+  },
   addOns: [
     {
       type: mongoose.Schema.Types.ObjectId,

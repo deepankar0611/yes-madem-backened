@@ -180,11 +180,91 @@ const getServicesBySubCategoryIds = async (req, res) => {
   }
 };
 
+// Mark a service as Trending Near You
+const addTrendingNearYou = async (req, res) => {
+  try {
+    const { serviceId } = req.body;
+    if (!serviceId) {
+      return res.status(400).json({ success: false, message: 'serviceId is required' });
+    }
+    const service = await Service.findById(serviceId);
+    if (!service) {
+      return res.status(404).json({ success: false, message: 'Service not found' });
+    }
+    service.isTrendingNearYou = true;
+    await service.save();
+    res.json({ success: true, message: 'Service marked as Trending Near You', service });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to mark as Trending Near You', error: error.message });
+  }
+};
+
+// Remove a service from Trending Near You
+const removeTrendingNearYou = async (req, res) => {
+  try {
+    const { serviceId } = req.body;
+    if (!serviceId) {
+      return res.status(400).json({ success: false, message: 'serviceId is required' });
+    }
+    const service = await Service.findById(serviceId);
+    if (!service) {
+      return res.status(404).json({ success: false, message: 'Service not found' });
+    }
+    service.isTrendingNearYou = false;
+    await service.save();
+    res.json({ success: true, message: 'Service removed from Trending Near You', service });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to remove from Trending Near You', error: error.message });
+  }
+};
+
+// Mark a service as Best Seller
+const addBestSeller = async (req, res) => {
+  try {
+    const { serviceId } = req.body;
+    if (!serviceId) {
+      return res.status(400).json({ success: false, message: 'serviceId is required' });
+    }
+    const service = await Service.findById(serviceId);
+    if (!service) {
+      return res.status(404).json({ success: false, message: 'Service not found' });
+    }
+    service.isBestSeller = true;
+    await service.save();
+    res.json({ success: true, message: 'Service marked as Best Seller', service });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to mark as Best Seller', error: error.message });
+  }
+};
+
+// Remove a service from Best Seller
+const removeBestSeller = async (req, res) => {
+  try {
+    const { serviceId } = req.body;
+    if (!serviceId) {
+      return res.status(400).json({ success: false, message: 'serviceId is required' });
+    }
+    const service = await Service.findById(serviceId);
+    if (!service) {
+      return res.status(404).json({ success: false, message: 'Service not found' });
+    }
+    service.isBestSeller = false;
+    await service.save();
+    res.json({ success: true, message: 'Service removed from Best Seller', service });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to remove from Best Seller', error: error.message });
+  }
+};
+
 module.exports = {
   getAllServices,
   getServiceById,
   addService,
   updateService,
   deleteService,
-  getServicesBySubCategoryIds
+  getServicesBySubCategoryIds,
+  addTrendingNearYou,
+  removeTrendingNearYou,
+  addBestSeller,
+  removeBestSeller
 }; 
