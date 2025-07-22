@@ -23,6 +23,10 @@ router.post('/last-minute-addon', serviceController.addLastMinuteAddon);
 router.post('/remove-last-minute-addon', serviceController.removeLastMinuteAddon);
 router.post('/people-also-availed', serviceController.addPeopleAlsoAvailed);
 router.post('/remove-people-also-availed', serviceController.removePeopleAlsoAvailed);
+router.post('/spa-retreat-for-women', serviceController.addSpaRetreatForWomen);
+router.post('/remove-spa-retreat-for-women', serviceController.removeSpaRetreatForWomen);
+router.post('/whats-new', serviceController.addWhatsNew);
+router.post('/remove-whats-new', serviceController.removeWhatsNew);
 // Get all services by subCategoryId
 router.get('/subcategory/:subCategoryId', async (req, res) => {
   try {

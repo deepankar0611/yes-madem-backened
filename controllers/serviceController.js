@@ -332,6 +332,82 @@ const removePeopleAlsoAvailed = async (req, res) => {
   }
 };
 
+// Mark a service as Spa Retreat for Women
+const addSpaRetreatForWomen = async (req, res) => {
+  try {
+    const { serviceId } = req.body;
+    if (!serviceId) {
+      return res.status(400).json({ success: false, message: 'serviceId is required' });
+    }
+    const service = await Service.findById(serviceId);
+    if (!service) {
+      return res.status(404).json({ success: false, message: 'Service not found' });
+    }
+    service.isSpaRetreatForWomen = true;
+    await service.save();
+    res.json({ success: true, message: 'Service marked as Spa Retreat for Women', service });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to mark as Spa Retreat for Women', error: error.message });
+  }
+};
+
+// Remove a service from Spa Retreat for Women
+const removeSpaRetreatForWomen = async (req, res) => {
+  try {
+    const { serviceId } = req.body;
+    if (!serviceId) {
+      return res.status(400).json({ success: false, message: 'serviceId is required' });
+    }
+    const service = await Service.findById(serviceId);
+    if (!service) {
+      return res.status(404).json({ success: false, message: 'Service not found' });
+    }
+    service.isSpaRetreatForWomen = false;
+    await service.save();
+    res.json({ success: true, message: 'Service removed from Spa Retreat for Women', service });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to remove from Spa Retreat for Women', error: error.message });
+  }
+};
+
+// Mark a service as What's New
+const addWhatsNew = async (req, res) => {
+  try {
+    const { serviceId } = req.body;
+    if (!serviceId) {
+      return res.status(400).json({ success: false, message: 'serviceId is required' });
+    }
+    const service = await Service.findById(serviceId);
+    if (!service) {
+      return res.status(404).json({ success: false, message: 'Service not found' });
+    }
+    service.isWhatsNew = true;
+    await service.save();
+    res.json({ success: true, message: "Service marked as What's New", service });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Failed to mark as What's New", error: error.message });
+  }
+};
+
+// Remove a service from What's New
+const removeWhatsNew = async (req, res) => {
+  try {
+    const { serviceId } = req.body;
+    if (!serviceId) {
+      return res.status(400).json({ success: false, message: 'serviceId is required' });
+    }
+    const service = await Service.findById(serviceId);
+    if (!service) {
+      return res.status(404).json({ success: false, message: 'Service not found' });
+    }
+    service.isWhatsNew = false;
+    await service.save();
+    res.json({ success: true, message: "Service removed from What's New", service });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Failed to remove from What's New", error: error.message });
+  }
+};
+
 module.exports = {
   getAllServices,
   getServiceById,
@@ -346,5 +422,9 @@ module.exports = {
   addLastMinuteAddon,
   removeLastMinuteAddon,
   addPeopleAlsoAvailed,
-  removePeopleAlsoAvailed
+  removePeopleAlsoAvailed,
+  addSpaRetreatForWomen,
+  removeSpaRetreatForWomen,
+  addWhatsNew,
+  removeWhatsNew
 }; 

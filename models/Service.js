@@ -93,6 +93,14 @@ const serviceSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  isSpaRetreatForWomen: {
+    type: Boolean,
+    default: false
+  },
+  isWhatsNew: {
+    type: Boolean,
+    default: false
+  },
   addOns: [
     {
       type: mongoose.Schema.Types.ObjectId,
