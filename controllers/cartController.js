@@ -1,5 +1,6 @@
 const Cart = require('../models/Cart');
 const mongoose = require('mongoose');
+const Booking = require('../models/Booking');
 
 // Get current user's cart
 const getCart = async (req, res) => {
@@ -136,18 +137,21 @@ const checkoutWithDetails = async (req, res) => {
     if (!cart) {
       return res.status(404).json({ success: false, message: 'Cart not found.' });
     }
-    // Placeholder: In a real app, create an Order/Booking here
+    // Save booking details in Booking collection
+    const booking = new Booking({
+      userId: req.user._id,
+      cartId: cart._id,
+      professionalType,
+      date,
+      time,
+      address,
+      items: cart.items.map(item => ({ serviceId: item.serviceId._id || item.serviceId, quantity: item.quantity }))
+    });
+    await booking.save();
     res.json({
       success: true,
-      message: 'Checkout successful. Booking details received.',
-      data: {
-        checkoutId,
-        professionalType,
-        date,
-        time,
-        address,
-        cart: [{ cartId: cart._id, items: cart.items }]
-      }
+      message: 'Checkout successful. Booking details saved.',
+      data: booking
     });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Checkout with details failed', error: error.message });
@@ -157,19 +161,15 @@ const checkoutWithDetails = async (req, res) => {
 // Get booking details for the authenticated user (placeholder: latest cart)
 const getBookingDetails = async (req, res) => {
   try {
-    // Find the latest cart for the user (as a placeholder for real booking data)
-    const cart = await Cart.findOne({ userId: req.user._id }).sort({ updatedAt: -1 }).populate('items.serviceId');
-    if (!cart) {
+    // Fetch all bookings for the user, most recent first
+    const bookings = await Booking.find({ userId: req.user._id }).sort({ createdAt: -1 });
+    if (!bookings || bookings.length === 0) {
       return res.status(404).json({ success: false, message: 'No booking found' });
     }
     res.json({
       success: true,
       message: 'Booking details fetched successfully.',
-      data: {
-        cartId: cart._id,
-        items: cart.items,
-        updatedAt: cart.updatedAt
-      }
+      data: bookings
     });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Failed to fetch booking details', error: error.message });
