@@ -126,42 +126,7 @@ const checkout = async (req, res) => {
   }
 };
 
-// Generate OTP for booking verification
-const generateBookingOTP = () => {
-  const otpLength = 6;
-  const otpExpiryMinutes = 5;
-  
-  const otp = Math.floor(Math.random() * Math.pow(10, otpLength))
-    .toString()
-    .padStart(otpLength, '0');
-  
-  const expiresAt = new Date(Date.now() + otpExpiryMinutes * 60 * 1000);
-  
-  return { code: otp, expiresAt };
-};
-
-// Verify OTP for booking
-const verifyBookingOTP = (booking, otp) => {
-  if (!booking.otp || !booking.otp.code || !booking.otp.expiresAt) {
-    return false;
-  }
-  
-  if (new Date() > booking.otp.expiresAt) {
-    booking.otp = undefined;
-    return false;
-  }
-  
-  if (booking.otp.code !== otp) {
-    return false;
-  }
-  
-  booking.otp = undefined;
-  booking.isVerified = true;
-  booking.status = 'completed';
-  
-  return true;
-};
-
+// Checkout with details (checkoutId, professional, date, time, address)
 const checkoutWithDetails = async (req, res) => {
   try {
     const { checkoutId, professionalType, date, time, address } = req.body;
@@ -172,10 +137,6 @@ const checkoutWithDetails = async (req, res) => {
     if (!cart) {
       return res.status(404).json({ success: false, message: 'Cart not found.' });
     }
-    
-    // Generate OTP for service verification
-    const otpData = generateBookingOTP();
-    
     // Save booking details in Booking collection
     const booking = new Booking({
       userId: req.user._id,
@@ -184,57 +145,21 @@ const checkoutWithDetails = async (req, res) => {
       date,
       time,
       address,
-      items: cart.items.map(item => ({ serviceId: item.serviceId._id || item.serviceId, quantity: item.quantity })),
-      otp: otpData
+      items: cart.items
+        .filter(item => item.serviceId) // Filter out items with null/undefined serviceId
+        .map(item => ({ 
+          serviceId: item.serviceId._id || item.serviceId, 
+          quantity: item.quantity 
+        }))
     });
     await booking.save();
-    
     res.json({
       success: true,
       message: 'Checkout successful. Booking details saved.',
-      data: {
-        booking,
-        otp: otpData.code, // Return OTP for testing
-        otpExpiresAt: otpData.expiresAt
-      }
-    });
-  } catch (error) {
-    res.status(500).json({ success: false, message: 'Checkout with details failed', error: error.message });
-  }
-};
-
-// Verify service completion with OTP (for partner app)
-const verifyServiceOTP = async (req, res) => {
-  try {
-    const { bookingId, otp } = req.body;
-    if (!bookingId || !otp) {
-      return res.status(400).json({ success: false, message: 'bookingId and otp are required.' });
-    }
-    
-    const booking = await Booking.findById(bookingId);
-    if (!booking) {
-      return res.status(404).json({ success: false, message: 'Booking not found.' });
-    }
-    
-    if (booking.isVerified) {
-      return res.status(400).json({ success: false, message: 'Service already verified.' });
-    }
-    
-    const isOTPValid = verifyBookingOTP(booking, otp);
-    if (!isOTPValid) {
-      await booking.save(); // Save to clear expired OTP
-      return res.status(400).json({ success: false, message: 'Invalid or expired OTP.' });
-    }
-    
-    await booking.save();
-    
-    res.json({
-      success: true,
-      message: 'Service verified successfully.',
       data: booking
     });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Failed to verify service', error: error.message });
+    res.status(500).json({ success: false, message: 'Checkout with details failed', error: error.message });
   }
 };
 
@@ -265,6 +190,5 @@ module.exports = {
   clearCart,
   checkout,
   checkoutWithDetails,
-  getBookingDetails,
-  verifyServiceOTP
+  getBookingDetails
 }; 
