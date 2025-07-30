@@ -16,5 +16,6 @@ router.post('/clear', cartController.clearCart);
 router.post('/checkout', cartController.checkout);
 router.post('/checkout-with-details', cartController.checkoutWithDetails);
 router.get('/booking-details', cartController.getBookingDetails);
+router.post('/verify-service-otp', cartController.verifyServiceOTP);
 
 module.exports = router; 

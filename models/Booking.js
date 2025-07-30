@@ -14,6 +14,11 @@ const bookingSchema = new mongoose.Schema({
     }
   ],
   status: { type: String, default: 'pending' },
+  otp: {
+    code: String,
+    expiresAt: Date
+  },
+  isVerified: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }
 });
