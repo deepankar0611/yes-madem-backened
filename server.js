@@ -11,6 +11,7 @@ const User = require('./models/User');
 const mainCategoryRoutes = require('./routes/mainCategory');
 const subCategoryRoutes = require('./routes/subCategory');
 const serviceRoutes = require('./routes/service');
+const bannerRoutes = require('./routes/banner');
 
 const app = express();
 
@@ -53,8 +54,8 @@ app.use(cors({
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Global rate limiting
-const globalLimiter = rateLimit({
+// Rate limiting for specific routes (excluding banners)
+const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // limit each IP to 100 requests per windowMs
   message: {
@@ -64,8 +65,6 @@ const globalLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
 });
-
-app.use(globalLimiter);
 
 // Health check endpoint
 app.get('/health', (req, res) => {
@@ -77,13 +76,16 @@ app.get('/health', (req, res) => {
   });
 });
 
-// API routes
-app.use('/api/auth', authRoutes);
+// API routes with rate limiting (excluding banners)
+app.use('/api/auth', apiLimiter, authRoutes);
 const cartRoutes = require('./routes/cart');
-app.use('/api/cart', cartRoutes);
-app.use('/api/main-categories', mainCategoryRoutes);
-app.use('/api/sub-categories', subCategoryRoutes);
-app.use('/api/services', serviceRoutes);
+app.use('/api/cart', apiLimiter, cartRoutes);
+app.use('/api/main-categories', apiLimiter, mainCategoryRoutes);
+app.use('/api/sub-categories', apiLimiter, subCategoryRoutes);
+app.use('/api/services', apiLimiter, serviceRoutes);
+
+// Banner routes without rate limiting
+app.use('/api/banners', bannerRoutes);
 
 // 404 handler
 app.use('*', (req, res) => {
