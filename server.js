@@ -1,7 +1,6 @@
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
 require('dotenv').config({ path: './config.env' });
 
 // Import routes and config
@@ -12,6 +11,7 @@ const mainCategoryRoutes = require('./routes/mainCategory');
 const subCategoryRoutes = require('./routes/subCategory');
 const serviceRoutes = require('./routes/service');
 const bannerRoutes = require('./routes/banner');
+const consultantBannerRoutes = require('./routes/consultantBanner');
 
 const app = express();
 
@@ -54,17 +54,7 @@ app.use(cors({
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Rate limiting for specific routes (excluding banners)
-const apiLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
-  message: {
-    success: false,
-    message: 'Too many requests from this IP. Please try again later.'
-  },
-  standardHeaders: true,
-  legacyHeaders: false,
-});
+
 
 // Health check endpoint
 app.get('/health', (req, res) => {
@@ -76,16 +66,19 @@ app.get('/health', (req, res) => {
   });
 });
 
-// API routes with rate limiting (excluding banners)
-app.use('/api/auth', apiLimiter, authRoutes);
+// API routes
+app.use('/api/auth', authRoutes);
 const cartRoutes = require('./routes/cart');
-app.use('/api/cart', apiLimiter, cartRoutes);
-app.use('/api/main-categories', apiLimiter, mainCategoryRoutes);
-app.use('/api/sub-categories', apiLimiter, subCategoryRoutes);
-app.use('/api/services', apiLimiter, serviceRoutes);
+app.use('/api/cart', cartRoutes);
+app.use('/api/main-categories', mainCategoryRoutes);
+app.use('/api/sub-categories', subCategoryRoutes);
+app.use('/api/services', serviceRoutes);
 
-// Banner routes without rate limiting
+// Banner routes
 app.use('/api/banners', bannerRoutes);
+
+// Consultant banner routes
+app.use('/api/consultant-banners', consultantBannerRoutes);
 
 // 404 handler
 app.use('*', (req, res) => {

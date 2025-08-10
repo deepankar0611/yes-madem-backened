@@ -64,43 +64,7 @@ const requireVerification = (req, res, next) => {
   next();
 };
 
-/**
- * Middleware to rate limit OTP requests
- */
-const rateLimitOTP = (req, res, next) => {
-  // This is a simple in-memory rate limiting
-  // In production, use Redis or a proper rate limiting library
-  const clientIP = req.ip || req.connection.remoteAddress;
-  const now = Date.now();
-  
-  if (!req.app.locals.otpAttempts) {
-    req.app.locals.otpAttempts = {};
-  }
-  
-  if (!req.app.locals.otpAttempts[clientIP]) {
-    req.app.locals.otpAttempts[clientIP] = { count: 0, lastAttempt: 0 };
-  }
-  
-  const attempts = req.app.locals.otpAttempts[clientIP];
-  
-  // Reset counter if more than 1 hour has passed
-  if (now - attempts.lastAttempt > 60 * 60 * 1000) {
-    attempts.count = 0;
-  }
-  
-  // Allow max 5 OTP requests per hour
-  if (attempts.count >= 5) {
-    return res.status(429).json({
-      success: false,
-      message: 'Too many OTP requests. Please try again later.'
-    });
-  }
-  
-  attempts.count++;
-  attempts.lastAttempt = now;
-  
-  next();
-};
+
 
 /**
  * Middleware to check if user is admin
@@ -118,6 +82,5 @@ const requireAdmin = (req, res, next) => {
 module.exports = {
   authenticate,
   requireVerification,
-  rateLimitOTP,
   requireAdmin
 }; 
