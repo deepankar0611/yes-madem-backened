@@ -6,9 +6,9 @@ const { authenticate, requireAdmin } = require('../middleware/auth');
 // Public routes (no authentication required)
 router.get('/active', consultantBannerController.getActiveConsultantBanners);
 router.get('/position/:position', consultantBannerController.getConsultantBannerByPosition);
+router.post('/', consultantBannerController.createConsultantBanner); // Create consultant banner (no auth required)
 
 // Admin routes (authentication and admin authorization required)
-router.post('/', authenticate, requireAdmin, consultantBannerController.createConsultantBanner);
 router.get('/', authenticate, requireAdmin, consultantBannerController.getAllConsultantBanners);
 router.get('/:id', authenticate, requireAdmin, consultantBannerController.getConsultantBannerById);
 router.put('/:id', authenticate, requireAdmin, consultantBannerController.updateConsultantBanner);

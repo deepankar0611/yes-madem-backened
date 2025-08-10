@@ -12,6 +12,7 @@ const subCategoryRoutes = require('./routes/subCategory');
 const serviceRoutes = require('./routes/service');
 const bannerRoutes = require('./routes/banner');
 const consultantBannerRoutes = require('./routes/consultantBanner');
+const consultantExpertRoutes = require('./routes/consultantExpert');
 
 const app = express();
 
@@ -79,6 +80,9 @@ app.use('/api/banners', bannerRoutes);
 
 // Consultant banner routes
 app.use('/api/consultant-banners', consultantBannerRoutes);
+
+// Consultant expert routes
+app.use('/api/consultant-experts', consultantExpertRoutes);
 
 // 404 handler
 app.use('*', (req, res) => {
