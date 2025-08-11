@@ -116,4 +116,9 @@ data/
 # SSL certificates
 *.pem
 *.key
-*.crt 
+*.crt
+
+# Firebase configuration
+google-services.json
+firebase-service-account.json
+firebase-admin-key.json 

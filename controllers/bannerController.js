@@ -16,11 +16,11 @@ const createBanner = async (req, res) => {
       });
     }
 
-    // Check if position is valid (1-5)
-    if (position < 1 || position > 5) {
+    // Check if position is valid (1-10)
+    if (position < 1 || position > 10) {
       return res.status(400).json({
         success: false,
-        message: 'Position must be between 1 and 5'
+        message: 'Position must be between 1 and 10'
       });
     }
 
@@ -120,10 +120,10 @@ const getBannerByPosition = async (req, res) => {
     const positionNum = parseInt(position);
 
     // Validate position
-    if (positionNum < 1 || positionNum > 5) {
+    if (positionNum < 1 || positionNum > 10) {
       return res.status(400).json({
         success: false,
-        message: 'Position must be between 1 and 5'
+        message: 'Position must be between 1 and 10'
       });
     }
 
@@ -263,10 +263,10 @@ const updateBannerPosition = async (req, res) => {
   try {
     const { position } = req.body;
     
-    if (!position || position < 1 || position > 5) {
+    if (!position || position < 1 || position > 10) {
       return res.status(400).json({
         success: false,
-        message: 'Position must be between 1 and 5'
+        message: 'Position must be between 1 and 10'
       });
     }
 
