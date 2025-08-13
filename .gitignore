@@ -121,4 +121,9 @@ data/
 # Firebase configuration
 google-services.json
 firebase-service-account.json
-firebase-admin-key.json 
+firebase-admin-key.json
+glamedge-a79d7-firebase-adminsdk-fbsvc-33f2574b7f.json
+*.json
+!package.json
+!package-lock.json
+!postman-collection.json 

@@ -103,25 +103,22 @@ userSchema.methods.comparePassword = async function(candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password);
 };
 
-// Instance method to generate OTP
+// Instance method to generate OTP (using static OTP for testing)
 userSchema.methods.generateOTP = function() {
-  const otpLength = parseInt(process.env.OTP_LENGTH) || 6;
   const otpExpiryMinutes = parseInt(process.env.OTP_EXPIRY_MINUTES) || 5;
   
-  // Generate random OTP
-  const otp = Math.floor(Math.random() * Math.pow(10, otpLength))
-    .toString()
-    .padStart(otpLength, '0');
+  // Use static OTP instead of random generation
+  const staticOTP = process.env.STATIC_OTP || '123456'; // Default static OTP: 123456
   
   // Set expiry time
   const expiresAt = new Date(Date.now() + otpExpiryMinutes * 60 * 1000);
   
   this.otp = {
-    code: otp,
+    code: staticOTP,
     expiresAt: expiresAt
   };
   
-  return otp;
+  return staticOTP;
 };
 
 // Instance method to verify OTP
