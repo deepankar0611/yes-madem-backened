@@ -2,6 +2,7 @@ const User = require('../models/User');
 const smsService = require('../services/smsService');
 const { generateToken } = require('../utils/jwtUtils');
 const LoginLog = require('../models/LoginLog');
+const { uploadToCloudinary, deleteFromCloudinary } = require('../services/cloudinaryService');
 
 /**
  * Register a new user with phone number only
@@ -430,10 +431,25 @@ const verifyOTP = async (req, res) => {
  */
 const getProfile = async (req, res) => {
   try {
+    const user = req.user;
+    
     res.json({
       success: true,
       data: {
-        user: req.user
+        user: {
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          phoneNumber: user.phoneNumber,
+          profilePicture: user.profilePicture,
+          dateOfBirth: user.dateOfBirth,
+          gender: user.gender,
+          maritalStatus: user.maritalStatus,
+          isVerified: user.isVerified,
+          role: user.role,
+          createdAt: user.createdAt,
+          updatedAt: user.updatedAt
+        }
       }
     });
   } catch (error) {
@@ -447,12 +463,30 @@ const getProfile = async (req, res) => {
 };
 
 /**
+ * Helper function to delete profile picture from Cloudinary
+ */
+const deleteProfilePicture = async (user) => {
+  if (user.profilePicture && user.profilePicture.public_id) {
+    try {
+      await deleteFromCloudinary(user.profilePicture.public_id);
+      user.profilePicture = { url: null, public_id: null };
+      await user.save();
+      return true;
+    } catch (error) {
+      console.error('Error deleting profile picture:', error);
+      return false;
+    }
+  }
+  return true;
+};
+
+/**
  * Update user profile
  * PUT /api/auth/profile
  */
 const updateProfile = async (req, res) => {
   try {
-    const { name, email } = req.body;
+    const { name, email, dateOfBirth, gender, maritalStatus, removeProfilePicture } = req.body;
     const user = req.user;
 
     // Update fields
@@ -468,6 +502,22 @@ const updateProfile = async (req, res) => {
       }
       user.email = email;
     }
+    
+    // Update new profile fields
+    if (dateOfBirth) {
+      user.dateOfBirth = new Date(dateOfBirth);
+    }
+    if (gender && ['male', 'female', 'other'].includes(gender)) {
+      user.gender = gender;
+    }
+    if (maritalStatus && ['single', 'married', 'divorced', 'widowed'].includes(maritalStatus)) {
+      user.maritalStatus = maritalStatus;
+    }
+
+    // Handle profile picture removal
+    if (removeProfilePicture === true) {
+      await deleteProfilePicture(user);
+    }
 
     await user.save();
 
@@ -480,6 +530,10 @@ const updateProfile = async (req, res) => {
           name: user.name,
           email: user.email,
           phoneNumber: user.phoneNumber,
+          profilePicture: user.profilePicture,
+          dateOfBirth: user.dateOfBirth,
+          gender: user.gender,
+          maritalStatus: user.maritalStatus,
           isVerified: user.isVerified
         }
       }
@@ -490,6 +544,138 @@ const updateProfile = async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Failed to update profile.',
+      error: error.message
+    });
+  }
+};
+
+/**
+ * Upload profile picture
+ * POST /api/auth/upload-profile-picture
+ */
+const uploadProfilePicture = async (req, res) => {
+  try {
+    const user = req.user;
+    
+    // Debug logging
+    console.log('Upload request received:', {
+      hasFile: !!req.file,
+      fileDetails: req.file ? {
+        originalname: req.file.originalname,
+        mimetype: req.file.mimetype,
+        size: req.file.size,
+        bufferLength: req.file.buffer ? req.file.buffer.length : 0
+      } : null,
+      headers: req.headers['content-type']
+    });
+    
+    // Check if file was uploaded
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: 'No profile picture uploaded.'
+      });
+    }
+    
+    // Additional validation: Check if file has content
+    if (!req.file.buffer || req.file.buffer.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Uploaded file is empty or corrupted.'
+      });
+    }
+    
+    // Validate file size (additional check)
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    if (req.file.size && req.file.size > maxSize) {
+      return res.status(400).json({
+        success: false,
+        message: 'File size exceeds 5MB limit.'
+      });
+    }
+
+    // Delete old profile picture from Cloudinary if exists
+    if (user.profilePicture && user.profilePicture.public_id) {
+      await deleteFromCloudinary(user.profilePicture.public_id);
+    }
+
+    // Upload new file to Cloudinary
+    const uploadResult = await uploadToCloudinary(req.file.buffer, req.file.mimetype, 'profile-pictures');
+    
+    if (!uploadResult.success) {
+      console.error('❌ Cloudinary upload failed:', {
+        error: uploadResult.error,
+        fileDetails: {
+          originalname: req.file.originalname,
+          mimetype: req.file.mimetype,
+          size: req.file.size,
+          bufferLength: req.file.buffer.length
+        }
+      });
+      
+      return res.status(500).json({
+        success: false,
+        message: 'Failed to upload image to Cloudinary.',
+        error: uploadResult.error
+      });
+    }
+
+    // Update user's profile picture
+    user.profilePicture = {
+      url: uploadResult.url,
+      public_id: uploadResult.public_id
+    };
+    
+    await user.save();
+
+    res.json({
+      success: true,
+      message: 'Profile picture uploaded successfully.',
+      data: {
+        profilePicture: user.profilePicture
+      }
+    });
+
+  } catch (error) {
+    console.error('Upload profile picture error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to upload profile picture.',
+      error: error.message
+    });
+  }
+};
+
+/**
+ * Delete profile picture
+ * DELETE /api/auth/profile-picture
+ */
+const deleteProfilePictureEndpoint = async (req, res) => {
+  try {
+    const user = req.user;
+    
+    const success = await deleteProfilePicture(user);
+    
+    if (success) {
+      res.json({
+        success: true,
+        message: 'Profile picture deleted successfully.',
+        data: {
+          profilePicture: user.profilePicture
+        }
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: 'Failed to delete profile picture.'
+      });
+    }
+
+  } catch (error) {
+    console.error('Delete profile picture error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to delete profile picture.',
       error: error.message
     });
   }
@@ -530,6 +716,8 @@ module.exports = {
   verifyOTP,
   getProfile,
   updateProfile,
+  uploadProfilePicture,
+  deleteProfilePictureEndpoint,
   saveAddress,
   getAddresses
 }; 

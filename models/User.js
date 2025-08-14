@@ -26,6 +26,24 @@ const userSchema = new mongoose.Schema({
     select: false, // Don't include password in queries by default
     minlength: [6, 'Password must be at least 6 characters']
   },
+  profilePicture: {
+    url: { type: String, default: null }, // Cloudinary URL
+    public_id: { type: String, default: null } // Cloudinary public_id for deletion
+  },
+  dateOfBirth: {
+    type: Date,
+    default: null
+  },
+  gender: {
+    type: String,
+    enum: ['male', 'female', 'other'],
+    default: undefined
+  },
+  maritalStatus: {
+    type: String,
+    enum: ['single', 'married', 'divorced', 'widowed'],
+    default: undefined
+  },
   isVerified: {
     type: Boolean,
     default: false

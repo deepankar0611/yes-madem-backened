@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Picture Upload Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 4px;
+            white-space: pre-wrap;
+        }
+        .success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .info {
+            background-color: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+    </style>
+</head>
+<body>
+    <h1>Profile Picture Upload Test</h1>
+    
+    <div class="form-group">
+        <label for="token">JWT Token:</label>
+        <input type="text" id="token" placeholder="Enter your JWT token here" style="font-family: monospace; font-size: 12px;">
+        <small>Get this from login/verify response</small>
+    </div>
+    
+    <div class="form-group">
+        <label for="imageFile">Select Image File:</label>
+        <input type="file" id="imageFile" accept="image/*">
+        <small>Supported formats: JPG, PNG, GIF, BMP, WebP (max 5MB)</small>
+    </div>
+    
+    <button onclick="uploadImage()">Upload Profile Picture</button>
+    
+    <div id="result"></div>
+    
+    <script>
+        async function uploadImage() {
+            const token = document.getElementById('token').value.trim();
+            const fileInput = document.getElementById('imageFile');
+            const resultDiv = document.getElementById('result');
+            
+            if (!token) {
+                showResult('Please enter a JWT token', 'error');
+                return;
+            }
+            
+            if (!fileInput.files[0]) {
+                showResult('Please select an image file', 'error');
+                return;
+            }
+            
+            const file = fileInput.files[0];
+            
+            // Validate file type
+            if (!file.type.startsWith('image/')) {
+                showResult(`Invalid file type: ${file.type}. Please select an image file.`, 'error');
+                return;
+            }
+            
+            // Validate file size
+            if (file.size > 5 * 1024 * 1024) {
+                showResult('File size exceeds 5MB limit', 'error');
+                return;
+            }
+            
+            const formData = new FormData();
+            formData.append('profilePicture', file);
+            
+            try {
+                showResult('Uploading...', 'info');
+                
+                const response = await fetch('http://localhost:3000/api/auth/upload-profile-picture', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    showResult(`✅ Upload successful!\n\nResponse: ${JSON.stringify(result, null, 2)}`, 'success');
+                } else {
+                    showResult(`❌ Upload failed!\n\nStatus: ${response.status}\nResponse: ${JSON.stringify(result, null, 2)}`, 'error');
+                }
+                
+            } catch (error) {
+                showResult(`❌ Error: ${error.message}`, 'error');
+            }
+        }
+        
+        function showResult(message, type) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent = message;
+            resultDiv.className = `result ${type}`;
+        }
+        
+        // Helper function to test token validity
+        async function testToken() {
+            const token = document.getElementById('token').value.trim();
+            if (!token) {
+                showResult('Please enter a JWT token first', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch('http://localhost:3000/api/auth/profile', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (response.ok) {
+                    showResult('✅ Token is valid! You can now upload images.', 'success');
+                } else {
+                    showResult('❌ Token is invalid or expired', 'error');
+                }
+            } catch (error) {
+                showResult(`❌ Error testing token: ${error.message}`, 'error');
+            }
+        }
+        
+        // Add test token button
+        document.addEventListener('DOMContentLoaded', function() {
+            const testButton = document.createElement('button');
+            testButton.textContent = 'Test Token';
+            testButton.onclick = testToken;
+            testButton.style.marginLeft = '10px';
+            testButton.style.backgroundColor = '#28a745';
+            
+            const tokenGroup = document.querySelector('.form-group');
+            tokenGroup.appendChild(testButton);
+        });
+    </script>
+</body>
+</html>

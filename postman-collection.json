@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "Yes Madem - Complete API Collection",
-    "description": "Complete Postman collection for all Yes Madem API endpoints including authentication, cart, services, categories, banners, and more.",
+    "description": "Complete Postman collection for all Yes Madem API endpoints including authentication, cart, services, categories, banners, consultant banners, consultant experts, and more.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
@@ -41,23 +41,10 @@
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"phoneNumber\": \"9876543210\"\n}"
+              "raw": "{\n  \"emailOrPhone\": \"9876543210\"\n}"
             },
             "url": { "raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api", "auth", "login"] },
-            "description": "Login with phone number. OTP will be sent for verification."
-          }
-        },
-        {
-          "name": "Verify Login OTP",
-          "request": {
-            "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"phoneNumber\": \"9876543210\",\n  \"otp\": \"123456\"\n}"
-            },
-            "url": { "raw": "{{baseUrl}}/api/auth/verify-login", "host": ["{{baseUrl}}"], "path": ["api", "auth", "verify-login"] },
-            "description": "Verify OTP and complete login. Returns JWT token."
+            "description": "Login with phone number or email. OTP will be sent for verification."
           }
         },
         {
@@ -67,7 +54,7 @@
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"phoneNumber\": \"9876543210\"\n}"
+              "raw": "{\n  \"emailOrPhone\": \"9876543210\"\n}"
             },
             "url": { "raw": "{{baseUrl}}/api/auth/send-otp", "host": ["{{baseUrl}}"], "path": ["api", "auth", "send-otp"] },
             "description": "Send OTP for account verification."
@@ -80,7 +67,7 @@
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"phoneNumber\": \"9876543210\",\n  \"otp\": \"123456\"\n}"
+              "raw": "{\n  \"emailOrPhone\": \"9876543210\",\n  \"otp\": \"123456\"\n}"
             },
             "url": { "raw": "{{baseUrl}}/api/auth/verify-otp", "host": ["{{baseUrl}}"], "path": ["api", "auth", "verify-otp"] },
             "description": "Verify OTP for account verification. Returns JWT token."
@@ -121,7 +108,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"address\": \"1821/41, Pocket 25, Jorbagh, Tri Nagar, New Delhi\"\n}"
+              "raw": "{\n  \"label\": \"Home\",\n  \"addressLine\": \"1821/41, Pocket 25, Jorbagh, Tri Nagar, New Delhi\",\n  \"city\": \"New Delhi\",\n  \"state\": \"Delhi\",\n  \"pincode\": \"110002\"\n}"
             },
             "url": { "raw": "{{baseUrl}}/api/auth/address", "host": ["{{baseUrl}}"], "path": ["api", "auth", "address"] },
             "description": "Save a new address for the user. Requires authentication."
@@ -156,7 +143,7 @@
             "method": "GET",
             "header": [],
             "url": { "raw": "{{baseUrl}}/api/banners/position/1", "host": ["{{baseUrl}}"], "path": ["api", "banners", "position", "1"] },
-            "description": "Get banner by position (1-5). Public endpoint."
+            "description": "Get banner by position (1-10). Public endpoint."
           }
         },
         {
@@ -232,6 +219,134 @@
             "header": [{ "key": "Authorization", "value": "Bearer {{authToken}}" }],
             "url": { "raw": "{{baseUrl}}/api/banners/<banner_id>", "host": ["{{baseUrl}}"], "path": ["api", "banners", "<banner_id>"] },
             "description": "Delete a banner. Admin only."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Consultant Banners",
+      "item": [
+        {
+          "name": "Get All Consultant Banners",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/consultant-banners", "host": ["{{baseUrl}}"], "path": ["api", "consultant-banners"] },
+            "description": "Get all consultant banners. Public endpoint."
+          }
+        },
+        {
+          "name": "Get Consultant Banner by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/consultant-banners/<banner_id>", "host": ["{{baseUrl}}"], "path": ["api", "consultant-banners", "<banner_id>"] },
+            "description": "Get consultant banner by ID. Public endpoint."
+          }
+        },
+        {
+          "name": "Create Consultant Banner",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Expert Consultant\",\n  \"description\": \"Book with our expert beauty consultant\",\n  \"imageUrl\": \"https://example.com/consultant-banner.jpg\",\n  \"linkUrl\": \"https://example.com/book-consultant\",\n  \"isActive\": true\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/consultant-banners", "host": ["{{baseUrl}}"], "path": ["api", "consultant-banners"] },
+            "description": "Create a new consultant banner. Admin only."
+          }
+        },
+        {
+          "name": "Update Consultant Banner",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Updated Expert Consultant\",\n  \"description\": \"Book with our updated expert beauty consultant\",\n  \"imageUrl\": \"https://example.com/updated-consultant-banner.jpg\",\n  \"linkUrl\": \"https://example.com/book-consultant-updated\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/consultant-banners/<banner_id>", "host": ["{{baseUrl}}"], "path": ["api", "consultant-banners", "<banner_id>"] },
+            "description": "Update a consultant banner. Admin only."
+          }
+        },
+        {
+          "name": "Delete Consultant Banner",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{authToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/consultant-banners/<banner_id>", "host": ["{{baseUrl}}"], "path": ["api", "consultant-banners", "<banner_id>"] },
+            "description": "Delete a consultant banner. Admin only."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Consultant Experts",
+      "item": [
+        {
+          "name": "Get All Consultant Experts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/consultant-experts", "host": ["{{baseUrl}}"], "path": ["api", "consultant-experts"] },
+            "description": "Get all consultant experts. Public endpoint."
+          }
+        },
+        {
+          "name": "Get Consultant Expert by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/consultant-experts/<expert_id>", "host": ["{{baseUrl}}"], "path": ["api", "consultant-experts", "<expert_id>"] },
+            "description": "Get consultant expert by ID. Public endpoint."
+          }
+        },
+        {
+          "name": "Create Consultant Expert",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Dr. Sarah Johnson\",\n  \"specialization\": \"Dermatology\",\n  \"experience\": \"15 years\",\n  \"qualification\": \"MBBS, MD Dermatology\",\n  \"imageUrl\": \"https://example.com/expert1.jpg\",\n  \"bio\": \"Expert dermatologist with 15 years of experience\",\n  \"isActive\": true\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/consultant-experts", "host": ["{{baseUrl}}"], "path": ["api", "consultant-experts"] },
+            "description": "Create a new consultant expert. Admin only."
+          }
+        },
+        {
+          "name": "Update Consultant Expert",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Dr. Sarah Johnson-Smith\",\n  \"specialization\": \"Dermatology & Aesthetics\",\n  \"experience\": \"16 years\",\n  \"qualification\": \"MBBS, MD Dermatology, Fellowship in Aesthetics\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/consultant-experts/<expert_id>", "host": ["{{baseUrl}}"], "path": ["api", "consultant-experts", "<expert_id>"] },
+            "description": "Update a consultant expert. Admin only."
+          }
+        },
+        {
+          "name": "Delete Consultant Expert",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{authToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/consultant-experts/<expert_id>", "host": ["{{baseUrl}}"], "path": ["api", "consultant-experts", "<expert_id>"] },
+            "description": "Delete a consultant expert. Admin only."
           }
         }
       ]
@@ -391,10 +506,13 @@
           "name": "Add Service",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Classic Facial\",\n  \"price\": 1500,\n  \"description\": \"A classic facial treatment\",\n  \"imageUrl\": \"https://example.com/classic-facial.jpg\",\n  \"subCategoryId\": \"<subcategory_id>\",\n  \"duration\": \"1 hour\",\n  \"benefits\": [\"Deep cleansing\", \"Skin rejuvenation\"],\n  \"isDiscounted\": false\n}"
+              "raw": "{\n  \"name\": \"Classic Facial\",\n  \"price\": 1500,\n  \"description\": \"A classic facial treatment\",\n  \"imageUrl\": \"https://example.com/classic-facial.jpg\",\n  \"subCategoryId\": \"<subcategory_id>\",\n  \"duration\": \"1 hour\",\n  \"benefits\": [\"Deep cleansing\", \"Skin rejuvenation\"],\n  \"keyIngredients\": [{\n    \"name\": \"Vitamin C\",\n    \"description\": \"Brightening agent\",\n    \"imageUrl\": \"https://example.com/vitamin-c.jpg\"\n  }],\n  \"procedure\": [{\n    \"title\": \"Cleansing\",\n    \"description\": \"Deep cleansing of the face\",\n    \"imageUrl\": \"https://example.com/cleansing.jpg\"\n  }],\n  \"precautionsAndAftercare\": [\"Avoid sun exposure for 24 hours\"],\n  \"thingsToKnow\": [\"Suitable for all skin types\"],\n  \"faqs\": [{\n    \"question\": \"How long does it take?\",\n    \"answer\": \"Approximately 1 hour\"\n  }],\n  \"isDiscounted\": false,\n  \"isPackageOption\": false,\n  \"isWeekdayOffer\": false,\n  \"isNewLaunch\": false,\n  \"isTrendingNearYou\": false,\n  \"isBestSeller\": false,\n  \"isLastMinuteAddon\": false,\n  \"isPeopleAlsoAvailed\": false,\n  \"isSpaRetreatForWomen\": false,\n  \"isWhatsNew\": false,\n  \"offerTags\": [],\n  \"categoryTags\": [\"Top Selling\", \"Classic Facial\"]\n}"
             },
             "url": { "raw": "{{baseUrl}}/api/services", "host": ["{{baseUrl}}"], "path": ["api", "services"] },
             "description": "Add a new service. Admin only."
@@ -404,7 +522,10 @@
           "name": "Update Service",
           "request": {
             "method": "PUT",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"name\": \"Updated Classic Facial\",\n  \"price\": 1800,\n  \"description\": \"An updated classic facial treatment\",\n  \"imageUrl\": \"https://example.com/updated-classic-facial.jpg\",\n  \"duration\": \"1.5 hours\",\n  \"benefits\": [\"Deep cleansing\", \"Skin rejuvenation\", \"Anti-aging\"]\n}"
@@ -417,7 +538,9 @@
           "name": "Delete Service",
           "request": {
             "method": "DELETE",
-            "header": [],
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
             "url": { "raw": "{{baseUrl}}/api/services/<service_id>", "host": ["{{baseUrl}}"], "path": ["api", "services", "<service_id>"] },
             "description": "Delete a service. Admin only."
           }
@@ -452,7 +575,10 @@
               "name": "Add Main Category",
               "request": {
                 "method": "POST",
-                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Authorization", "value": "Bearer {{authToken}}" }
+                ],
                 "body": {
                   "mode": "raw",
                   "raw": "{\n  \"name\": \"Facial\",\n  \"imageUrl\": \"https://example.com/facial.jpg\"\n}"
@@ -465,7 +591,10 @@
               "name": "Update Main Category",
               "request": {
                 "method": "PUT",
-                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Authorization", "value": "Bearer {{authToken}}" }
+                ],
                 "body": {
                   "mode": "raw",
                   "raw": "{\n  \"name\": \"Updated Facial\",\n  \"imageUrl\": \"https://example.com/updated-facial.jpg\"\n}"
@@ -478,7 +607,9 @@
               "name": "Delete Main Category",
               "request": {
                 "method": "DELETE",
-                "header": [],
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{authToken}}" }
+                ],
                 "url": { "raw": "{{baseUrl}}/api/main-categories/<category_id>", "host": ["{{baseUrl}}"], "path": ["api", "main-categories", "<category_id>"] },
                 "description": "Delete a main category. Admin only."
               }
@@ -519,7 +650,10 @@
               "name": "Add Sub Category",
               "request": {
                 "method": "POST",
-                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Authorization", "value": "Bearer {{authToken}}" }
+                ],
                 "body": {
                   "mode": "raw",
                   "raw": "{\n  \"name\": \"Korean Facial\",\n  \"imageUrl\": \"https://example.com/korean-facial.jpg\",\n  \"mainCategoryId\": \"<maincategory_id>\"\n}"
@@ -532,7 +666,10 @@
               "name": "Update Sub Category",
               "request": {
                 "method": "PUT",
-                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Authorization", "value": "Bearer {{authToken}}" }
+                ],
                 "body": {
                   "mode": "raw",
                   "raw": "{\n  \"name\": \"Updated Korean Facial\",\n  \"imageUrl\": \"https://example.com/updated-korean-facial.jpg\",\n  \"mainCategoryId\": \"<maincategory_id>\"\n}"
@@ -545,7 +682,9 @@
               "name": "Delete Sub Category",
               "request": {
                 "method": "DELETE",
-                "header": [],
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{authToken}}" }
+                ],
                 "url": { "raw": "{{baseUrl}}/api/sub-categories/<subcategory_id>", "host": ["{{baseUrl}}"], "path": ["api", "sub-categories", "<subcategory_id>"] },
                 "description": "Delete a sub category. Admin only."
               }
